@@ -48,14 +48,14 @@ module tt_um_noah_azz_demo(
     .vpos(pix_y)
   );
   
-  wire [9:0] moving_x = pix_x + (counter * counter[6]) - (counter * !counter[6]) ;
+  wire [9:0] moving_x = pix_x + counter;
 
   assign R = video_active ? {moving_x[5]|pix_y[5], moving_x[4]} : 2'b00;
   assign G = video_active ? {1'b0, (!moving_x[5]&!pix_y[5])&pix_y[2]&pix_x[2]} : 2'b00;
   assign B = video_active ? {(moving_x[5]&!pix_x[7]), moving_x[4]&!pix_x[7]} : 2'b00;
 
   always @(posedge vsync, negedge rst_n) begin
-    if (~rst_n | counter[6]) begin
+    if (~rst_n) begin
       counter <= 0;
     end else begin
       counter <= counter + 1;
